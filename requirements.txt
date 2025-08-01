@@ -3,3 +3,10 @@ pydantic
 python-dotenv
 pydantic-settings
 langchain_core
+langgraph
+langchain_community
+pinecone-client
+bs4
+langchain-pinecone
+typer[all]
+rich
