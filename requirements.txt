@@ -7,4 +7,3 @@ langgraph
 pinecone-client
 langchain-pinecone
 langchain-google-genai
-langgraph-checkpoint-mongodb
