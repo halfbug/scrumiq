@@ -6,3 +6,4 @@ langchain_core
 langgraph
 pinecone-client
 langchain-pinecone
+langchain-google-genai
