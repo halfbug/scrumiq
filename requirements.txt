@@ -5,5 +5,4 @@ pydantic-settings
 langchain_core
 langgraph
 langchain_community
-pinecone-client
-langchain-pinecone
+
