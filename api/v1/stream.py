@@ -18,7 +18,7 @@ from utilities.database.models.checkpoints import Checkpoints
 from utilities.database.models.checkpoint_writes import CheckpointWrites
 import logging
 import uuid
-from utilities.helper import convert_to_clean_json, extract_token_usage_details
+from utilities.helper import extract_token_usage_details
 from utilities.llm.tools.content_search_tool import content_search
 from utilities.llm.tools.sample_tool import get_weather
 from core.model_config import get_active_model

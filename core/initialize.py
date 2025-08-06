@@ -23,6 +23,7 @@ def set_environment_variables():
         'HUGGINGFACEHUB_API_TOKEN': config.HUGGINGFACEHUB_API_TOKEN,
         'DEEPSEEK_API_KEY': config.DEEPSEEK_API_KEY,
         'MONGO_DB': config.MONGO_DB,
+        'SEARCH_URL': config.SEARCH_URL,
     }
 
     for var_name, value in optional_vars.items():

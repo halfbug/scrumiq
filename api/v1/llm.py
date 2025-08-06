@@ -10,14 +10,14 @@ from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 
 from core.initialize import set_environment_variables
-from utilities.helper import convert_to_clean_json, extract_token_usage_details
-from utilities.llm.rag_agent import RAGAgent
-from utilities.llm.questions_prompt import generate_question_prompt
-from utilities.textloader import load_documents_from_folder
-from utilities.vectorstore import PineconeVectorStoreHandler
-from utilities.llm.difficulty_agent import DifficultyAgent
-from utilities.content_filter import filter_images, restore_images
-from core.model_config import get_active_model
+# from utilities.helper import convert_to_clean_json, extract_token_usage_details
+# from utilities.llm.rag_agent import RAGAgent
+# from utilities.llm.questions_prompt import generate_question_prompt
+# from utilities.textloader import load_documents_from_folder
+# from utilities.vectorstore import PineconeVectorStoreHandler
+# from utilities.llm.difficulty_agent import DifficultyAgent
+# from utilities.content_filter import filter_images, restore_images
+# from core.model_config import get_active_model
 
 router = APIRouter()
 
@@ -70,145 +70,145 @@ async def validate_api_key(x_api_key: Optional[str] = Header(None)):
         raise HTTPException(status_code=403, detail="Access denied: Invalid credentials provided.")
     return x_api_key
 
-# Update the route decorators to include the dependency
-@router.post("/genquestion", name="generate_question", response_model=QuestionResponse, dependencies=[Depends(validate_api_key)])
-async def generate_question(request_data: QuestionRequest):
-        """
-        Generate a question based on the given prompt and language model.
+# # Update the route decorators to include the dependency
+# @router.post("/genquestion", name="generate_question", response_model=QuestionResponse, dependencies=[Depends(validate_api_key)])
+# async def generate_question(request_data: QuestionRequest):
+#         """
+#         Generate a question based on the given prompt and language model.
 
-        Args:
-            request (Request): The incoming request.
-            question (QuestionRequest): The request body containing the prompt and language model.
+#         Args:
+#             request (Request): The incoming request.
+#             question (QuestionRequest): The request body containing the prompt and language model.
 
-        Returns:
-            Response[GeneratedQuestion]: The response containing the generated question.
-        """
-        print("request_data", request_data)
-        # print("",request_data)
-        messageBot=""
-        prompt = generate_question_prompt(
-        question_type=request_data.questionType,
-        topic_title=request_data.topicTitle,
-        class_grade=request_data.classGrade,
-        difficulty_level=request_data.difficultyLevel,
-        additional_info=request_data.additionalInfo,
+#         Returns:
+#             Response[GeneratedQuestion]: The response containing the generated question.
+#         """
+#         print("request_data", request_data)
+#         # print("",request_data)
+#         messageBot=""
+#         prompt = generate_question_prompt(
+#         question_type=request_data.questionType,
+#         topic_title=request_data.topicTitle,
+#         class_grade=request_data.classGrade,
+#         difficulty_level=request_data.difficultyLevel,
+#         additional_info=request_data.additionalInfo,
         
-    )if request_data.customPrompt is None else ""
+#     )if request_data.customPrompt is None else ""
         
-        print("uuid",str(uuid.uuid4()))
-        thread_id =request_data.thread_id if request_data.thread_id is not None else str(uuid.uuid4())
-        print("thread_id:::::",thread_id)
-        agent = RAGAgent(
-            system_prompt=prompt,
-            tools=[],
-            llm=get_active_model(request_data.aiTool),  # Use get_active_model directly
-            customPrompt=request_data.customPrompt,
-            publication_id=request_data.publication_id if request_data.publication_id else None,
-            question_type=request_data.questionType  # Send question type
-        )
+#         print("uuid",str(uuid.uuid4()))
+#         thread_id =request_data.thread_id if request_data.thread_id is not None else str(uuid.uuid4())
+#         print("thread_id:::::",thread_id)
+#         agent = RAGAgent(
+#             system_prompt=prompt,
+#             tools=[],
+#             llm=get_active_model(request_data.aiTool),  # Use get_active_model directly
+#             customPrompt=request_data.customPrompt,
+#             publication_id=request_data.publication_id if request_data.publication_id else None,
+#             question_type=request_data.questionType  # Send question type
+#         )
 
-        questions_response = await agent.run(
-            initial_input=request_data.topicTitle if request_data.topicTitle else request_data.customPrompt,
-            thread_id=thread_id,
+#         questions_response = await agent.run(
+#             initial_input=request_data.topicTitle if request_data.topicTitle else request_data.customPrompt,
+#             thread_id=thread_id,
            
-        )
-        print(questions_response)
-        # print(questions_response["response"][0].content)
-        current_history=agent.graph.get_state({'configurable': {'thread_id': thread_id}})
-        print(":::::current_history:::::::",current_history)
-        print(":::::config:::::::",current_history.config)
-        print(":::::config Parent Config:::::::",current_history.parent_config)
-        checkpoint_id = current_history.config['configurable'].pop('checkpoint_id', None)  # Get checkpoint_id
-        parent_checkpointer_id = current_history.parent_config['configurable'].pop('checkpoint_id', None)
+#         )
+#         print(questions_response)
+#         # print(questions_response["response"][0].content)
+#         current_history=agent.graph.get_state({'configurable': {'thread_id': thread_id}})
+#         print(":::::current_history:::::::",current_history)
+#         print(":::::config:::::::",current_history.config)
+#         print(":::::config Parent Config:::::::",current_history.parent_config)
+#         checkpoint_id = current_history.config['configurable'].pop('checkpoint_id', None)  # Get checkpoint_id
+#         parent_checkpointer_id = current_history.parent_config['configurable'].pop('checkpoint_id', None)
 
-        try:
-            qcontent = None
-            last_question = questions_response["response"][-1]
-            try:
-                    qcontent = convert_to_clean_json(last_question.content)
-                    print(qcontent)
+#         try:
+#             qcontent = None
+#             last_question = questions_response["response"][-1]
+#             try:
+#                     qcontent = convert_to_clean_json(last_question.content)
+#                     print(qcontent)
                     
-            except Exception as e:
-                    print(f"::: error in model Response: {last_question.response_metadata.get('model_name', 'unknown')} ")
-                    messageBot = questions_response["response"][0].content
-                    print(e)
+#             except Exception as e:
+#                     print(f"::: error in model Response: {last_question.response_metadata.get('model_name', 'unknown')} ")
+#                     messageBot = questions_response["response"][0].content
+#                     print(e)
                     
-            question = None
-            if qcontent.get('question_text') == '':
-                messageBot = questions_response["response"][-1].content
-            else:
-                question = Question(**{**qcontent, "model_name": last_question.response_metadata.get('model_name', 'unknown')})
+#             question = None
+#             if qcontent.get('question_text') == '':
+#                 messageBot = questions_response["response"][-1].content
+#             else:
+#                 question = Question(**{**qcontent, "model_name": last_question.response_metadata.get('model_name', 'unknown')})
             
-            print(":::::::clean question", question)
-            token_usage_details_list = extract_token_usage_details([questions_response["response"][-1]], num_messages=1)
-            for token_usage_details in token_usage_details_list:
-                token_usage_details["question_type"] = request_data.questionType
-                agent.save_token_usage(thread_id, token_usage_details, request_data.user_id)
-        except Exception as e:
-            print(e)
-            message = str(e).split(": ", 1)[-1]
-            token_usage_details_list = extract_token_usage_details([questions_response["response"][-1]], num_messages=1)
-            for token_usage_details in token_usage_details_list:
-                agent.save_token_usage(thread_id, token_usage_details, request_data.user_id)
-            return QuestionResponse(thread_id=str(thread_id),message=messageBot, checkpoint_id=checkpoint_id, parent_checkpointer_id=None)  # Include checkpoint_id   
-        # print(questions)
-        # response = await llm.generate_question(request, question)
-        print("questions:::::",question)
-        return QuestionResponse(question=question, question_type=request_data.questionType, thread_id=str(thread_id), checkpoint_id=checkpoint_id, parent_checkpointer_id=parent_checkpointer_id, message=messageBot)  # Include checkpoint_id
+#             print(":::::::clean question", question)
+#             token_usage_details_list = extract_token_usage_details([questions_response["response"][-1]], num_messages=1)
+#             for token_usage_details in token_usage_details_list:
+#                 token_usage_details["question_type"] = request_data.questionType
+#                 agent.save_token_usage(thread_id, token_usage_details, request_data.user_id)
+#         except Exception as e:
+#             print(e)
+#             message = str(e).split(": ", 1)[-1]
+#             token_usage_details_list = extract_token_usage_details([questions_response["response"][-1]], num_messages=1)
+#             for token_usage_details in token_usage_details_list:
+#                 agent.save_token_usage(thread_id, token_usage_details, request_data.user_id)
+#             return QuestionResponse(thread_id=str(thread_id),message=messageBot, checkpoint_id=checkpoint_id, parent_checkpointer_id=None)  # Include checkpoint_id   
+#         # print(questions)
+#         # response = await llm.generate_question(request, question)
+#         print("questions:::::",question)
+#         return QuestionResponse(question=question, question_type=request_data.questionType, thread_id=str(thread_id), checkpoint_id=checkpoint_id, parent_checkpointer_id=parent_checkpointer_id, message=messageBot)  # Include checkpoint_id
 
-@router.post("/reindex", name="reindex_data", dependencies=[Depends(validate_api_key)])
-async def reindex_data():
-    """
-    Reindex the data in the database or search index.
+# @router.post("/reindex", name="reindex_data", dependencies=[Depends(validate_api_key)])
+# async def reindex_data():
+#     """
+#     Reindex the data in the database or search index.
 
-    Returns:
-        Response: The response indicating the status of the reindexing operation.
-    """
+#     Returns:
+#         Response: The response indicating the status of the reindexing operation.
+#     """
     
-    try:
-        #initialize vectorstore
-        vstorehandler = PineconeVectorStoreHandler()
-        vstorehandler.reset_index()
-        #load articles
-        dataset_folder = "./dataset"
-        docs = load_documents_from_folder(dataset_folder)
-        vectorstore = vstorehandler.get_vector_store(docs)
+#     try:
+#         #initialize vectorstore
+#         vstorehandler = PineconeVectorStoreHandler()
+#         vstorehandler.reset_index()
+#         #load articles
+#         dataset_folder = "./dataset"
+#         docs = load_documents_from_folder(dataset_folder)
+#         vectorstore = vstorehandler.get_vector_store(docs)
         
-        return {"status": "success", "message": "Data reindexed successfully"}
-    except Exception as e:
-        print(e)
-        print("Failed to reindex data")
-        raise HTTPException(status_code=500, detail=f"Failed to reindex data: {str(e)}")
+#         return {"status": "success", "message": "Data reindexed successfully"}
+#     except Exception as e:
+#         print(e)
+#         print("Failed to reindex data")
+#         raise HTTPException(status_code=500, detail=f"Failed to reindex data: {str(e)}")
 
-class DifficultyRequest(BaseModel):
-    content: str
-    grade: str
-    selected_difficulty: Optional[Literal['easy', 'hard']] = 'easy'
-    user_id: str = "system"  # Add user_id field
+# class DifficultyRequest(BaseModel):
+#     content: str
+#     grade: str
+#     selected_difficulty: Optional[Literal['easy', 'hard']] = 'easy'
+#     user_id: str = "system"  # Add user_id field
 
-@router.post("/difficultylevel", dependencies=[Depends(validate_api_key)])
-async def adjust_difficulty(request: DifficultyRequest):
-    """
-    Adjust content difficulty based on grade level and selected difficulty.
-    """
-    try:
-        # Filter images before processing
-        filtered_content, image_map = filter_images(request.content)
-        print("filtered_content", filtered_content)
-        agent = DifficultyAgent(llm=get_active_model("gemini"))  # Use get_active_model directly
-        result = await agent.run(
-            content=filtered_content,
-            grade=request.grade,
-            difficulty=request.selected_difficulty,
-            user_id=request.user_id
-        )
+# @router.post("/difficultylevel", dependencies=[Depends(validate_api_key)])
+# async def adjust_difficulty(request: DifficultyRequest):
+#     """
+#     Adjust content difficulty based on grade level and selected difficulty.
+#     """
+#     try:
+#         # Filter images before processing
+#         filtered_content, image_map = filter_images(request.content)
+#         print("filtered_content", filtered_content)
+#         agent = DifficultyAgent(llm=get_active_model("gemini"))  # Use get_active_model directly
+#         result = await agent.run(
+#             content=filtered_content,
+#             grade=request.grade,
+#             difficulty=request.selected_difficulty,
+#             user_id=request.user_id
+#         )
         
-        # Restore images in the processed content
-        processed_content = restore_images(result["response"][-1].content, image_map)
-        print("processed_content", processed_content)
-        return {
-            "status": "success",
-            "content": processed_content
-        }
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+#         # Restore images in the processed content
+#         processed_content = restore_images(result["response"][-1].content, image_map)
+#         print("processed_content", processed_content)
+#         return {
+#             "status": "success",
+#             "content": processed_content
+#         }
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail=str(e))

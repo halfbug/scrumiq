@@ -24,6 +24,7 @@ class GlobalConfig(BaseConfig):
     HUGGINGFACEHUB_API_TOKEN: Optional[str] = None
     DEEPSEEK_API_KEY: Optional[str] = None
     API_KEY: Optional[str] = None
+    SEARCH_URL: Optional[str] = None
 
 
 class DevConfig(GlobalConfig):

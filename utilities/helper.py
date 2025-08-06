@@ -1,69 +1,69 @@
 import re
 import json
-import json5
+# import json5
 from typing import Dict, Any, List
 from langchain_core.messages import AIMessage
 
-def convert_to_clean_json(raw_content: str) -> Dict[str, Any]:
-    """
-    Converts raw JSON content into a clean JSON format.
-    Handles cases where the content is embedded in markdown, text, or raw JSON.
+# def convert_to_clean_json(raw_content: str) -> Dict[str, Any]:
+#     """
+#     Converts raw JSON content into a clean JSON format.
+#     Handles cases where the content is embedded in markdown, text, or raw JSON.
 
-    Parameters:
-        raw_content (str): Raw JSON content.
+#     Parameters:
+#         raw_content (str): Raw JSON content.
 
-    Returns:
-        dict: Cleaned dictionary matching the expected schema.
-    """
-    content = raw_content.strip()
-    parsed_content = None
+#     Returns:
+#         dict: Cleaned dictionary matching the expected schema.
+#     """
+#     content = raw_content.strip()
+#     parsed_content = None
 
-    # 1. Try to extract from code blocks first
-    json_block_match = re.search(r'```json\s*(.*?)\s*```', content, re.DOTALL)
-    if json_block_match:
-        try:
-            parsed_content = json.loads(json_block_match.group(1).strip())
-        except (json.JSONDecodeError, AttributeError):
-            pass
+#     # 1. Try to extract from code blocks first
+#     json_block_match = re.search(r'```json\s*(.*?)\s*```', content, re.DOTALL)
+#     if json_block_match:
+#         try:
+#             parsed_content = json.loads(json_block_match.group(1).strip())
+#         except (json.JSONDecodeError, AttributeError):
+#             pass
 
-    # 2. If not in code block, try to find JSON in text content
-    if parsed_content is None:
-        # Look for JSON-like structure in text
-        start_idx = content.find('{')
-        end_idx = content.rfind('}')
-        if start_idx != -1 and end_idx != -1 and start_idx < end_idx:
-            try:
-                potential_json = content[start_idx:end_idx+1]
-                parsed_content = json.loads(potential_json)
-            except json.JSONDecodeError:
-                pass
+#     # 2. If not in code block, try to find JSON in text content
+#     if parsed_content is None:
+#         # Look for JSON-like structure in text
+#         start_idx = content.find('{')
+#         end_idx = content.rfind('}')
+#         if start_idx != -1 and end_idx != -1 and start_idx < end_idx:
+#             try:
+#                 potential_json = content[start_idx:end_idx+1]
+#                 parsed_content = json.loads(potential_json)
+#             except json.JSONDecodeError:
+#                 pass
 
-    # 3. Try parsing entire content as last resort
-    if parsed_content is None:
-        try:
-            parsed_content = json.loads(content)
-        except json.JSONDecodeError:
-            pass
+#     # 3. Try parsing entire content as last resort
+#     if parsed_content is None:
+#         try:
+#             parsed_content = json.loads(content)
+#         except json.JSONDecodeError:
+#             pass
 
-    # Create default structure with empty values
-    default_structure = {
-        "question_text": "",
-        "choices": [],
-        "answer": [],
-        "suggested_answer": "",
-        "pairs": [],
-        "groups": [],
-        "terms": [],
-    }
+#     # Create default structure with empty values
+#     default_structure = {
+#         "question_text": "",
+#         "choices": [],
+#         "answer": [],
+#         "suggested_answer": "",
+#         "pairs": [],
+#         "groups": [],
+#         "terms": [],
+#     }
 
-    # If we successfully parsed something, merge with defaults
-    if parsed_content:
-        return {
-            **default_structure,
-            **{k: v for k, v in parsed_content.items() if k in default_structure}
-        }
+#     # If we successfully parsed something, merge with defaults
+#     if parsed_content:
+#         return {
+#             **default_structure,
+#             **{k: v for k, v in parsed_content.items() if k in default_structure}
+#         }
     
-    return default_structure
+#     return default_structure
 # # print(":::::raw_content",raw_content)
     # # Check if the content contains the code block marker
     # if "```json" in raw_content:
