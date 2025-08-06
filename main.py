@@ -1,7 +1,20 @@
 from time import time
+from pymongo import MongoClient
+from core.config import config
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, __version__
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    app.mongodb_client = MongoClient(config.MONGO_URI)
+    app.database = app.mongodb_client[config.MONGO_DB]
+    print("Connected to the MongoDB database!")
+    yield
+    app.mongodb_client.close()
+
+app = FastAPI(lifespan=lifespan)
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
