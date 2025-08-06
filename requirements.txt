@@ -6,7 +6,7 @@ langgraph
 pinecone-client
 langchain-pinecone
 pymongo>=4.5.0
-mongoengine>=0.27.0
+# mongoengine>=0.27.0
 langgraph-checkpoint-mongodb
 pydantic-settings
 langchain_community
