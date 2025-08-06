@@ -1,0 +1,21 @@
+pdf_url,publication_id,type,source_table,unit_id,week_id,article_id
+https://localhost:3001/publications/108/weeks/3574/printables/AZ-03-SS-EN-V1-Week-1.pdf,108,printable,worksheet,121,3574,1
+https://cdn.studiesweekly.com/online/weekly_assessment_pdfs/3574/Weekly Assessment Week 1.pdf,108,Assessment,panels,121,3574,2
+https://cdn.studiesweekly.com/online/student_editions/3574/1.pdf,108,Student Edition,media,121,3574,1
+https://localhost:3001/publications/108/weeks/3578/printables/AZ-03-SS-EN-V1-Week-2.pdf,108,printable,panels,121,3578,1
+https://cdn.studiesweekly.com/online/weekly_assessment_pdfs/3578/Weekly Assessment Week 2.pdf,108,Assessment,media,121,3578,3
+https://cdn.studiesweekly.com/online/student_editions/3578/2.pdf,108,Student Edition,worksheet,121,3578,2
+https://localhost:3001/publications/108/weeks/3579/printables/AZ-03-SS-EN-V1-Week-3.pdf,108,printable,media,121,3579,2
+https://cdn.studiesweekly.com/online/weekly_assessment_pdfs/3579/Weekly Assessment Week 3.pdf,108,Assessment,worksheet,121,3579,1
+https://cdn.studiesweekly.com/online/student_editions/3579/3.pdf,108,Student Edition,panels,121,3579,3
+https://localhost:3001/publications/108/weeks/3580/printables/AZ-03-SS-EN-V1-Week-4.pdf,108,printable,worksheet,121,3580,3
+https://cdn.studiesweekly.com/online/weekly_assessment_pdfs/3580/Weekly Assessment Week 4.pdf,108,Assessment,media,121,3580,2
+https://cdn.studiesweekly.com/online/student_editions/3580/4.pdf,108,Student Edition,panels,121,3580,4
+https://localhost:3001/publications/108/weeks/3581/printables/AZ-03-SS-EN-V1-Week-5.pdf,108,printable,media,121,3581,1
+https://cdn.studiesweekly.com/online/weekly_assessment_pdfs/3581/Weekly Assessment Week 5.pdf,108,Assessment,panels,121,3581,3
+https://cdn.studiesweekly.com/online/student_editions/3581/5.pdf,108,Student Edition,worksheet,121,3581,5
+https://localhost:3001/publications/108/weeks/3582/printables/AZ-03-SS-EN-V1-Week-6.pdf,108,printable,panels,121,3582,2
+https://cdn.studiesweekly.com/online/weekly_assessment_pdfs/3582/Weekly Assessment Week 6.pdf,108,Assessment,worksheet,121,3582,1
+https://cdn.studiesweekly.com/online/student_editions/3582/6.pdf,108,Student Edition,media,121,3582,6
+https://cdn.studiesweekly.com/online/weekly_assessment_pdfs/4347/Weekly Assessment Week 7.pdf,108,Assessment,media,121,4347,3
+https://cdn.studiesweekly.com/online/student_editions/4347/7.pdf,108,Student Edition,worksheet,121,4347,7
