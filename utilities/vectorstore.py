@@ -5,7 +5,7 @@ from pinecone import Pinecone
 from pinecone import ServerlessSpec, PodSpec
 from langchain_pinecone import PineconeVectorStore
 from langchain_openai import OpenAIEmbeddings
-from langchain_community.document_loaders import TextLoader
+# from langchain_community.document_loaders import TextLoader
 from langchain_text_splitters import CharacterTextSplitter
 from rich.console import Console
 
