@@ -10,7 +10,8 @@ mongoengine>=0.27.0
 langgraph-checkpoint-mongodb
 pydantic-settings
 langchain-groq
-sentence-transformers
+openai
+langchain_openai
 # langchain_community
 # typer[all]>=0.9.0
 # rich>=13.7.0
